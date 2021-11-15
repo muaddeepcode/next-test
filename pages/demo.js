@@ -4,13 +4,14 @@ import styles from '../styles/Demo.module.scss';
 
 const Demo = () => {
 
-  const ITEMS_TOTAL = 40;
+  const ITEMS_TOTAL = 100;
 
-  const [items, setItems] = useState([]);
-  const [opacity, setOpacity] = useState(0);
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const [maxPage, setMaxPage] = useState(0);
+  const [state, setState] = useState({
+    items: [],
+    opacity: 0,
+    currentPage: 1,
+    maxPage: 0
+  });
 
   const gridRef = useRef(null);
 
@@ -18,7 +19,10 @@ const Demo = () => {
   useEffect(()=>{
     fakeGetItems();
     setTimeout(()=>{
-      setMaxPage(Math.ceil(gridRef.current.offsetHeight / window.innerHeight) - 1);
+      setState(state => ({
+        ...state,
+        maxPage: Math.ceil(gridRef.current.offsetHeight / window.innerHeight) - 1
+      }))
     }, 500)
   }, []);
 
@@ -35,7 +39,10 @@ const Demo = () => {
       id: index,
       alt: `Элемент #${index}`
     }))
-    setItems(items);
+    setState(state => ({
+      ...state,
+      items: items
+    }))
   }
 
 
@@ -46,26 +53,30 @@ const Demo = () => {
     const scrollLength = gridRef.current.offsetHeight - e.target.offsetHeight;
 
     // задаём прозрачность фона
-    setOpacity(scrollTop/scrollLength)
+    setState(state => ({
+      ...state,
+      opacity: scrollTop/scrollLength
+    }));
 
     // считаем текущую страницу
-    setCurrentPage(
-      Math.ceil(scrollTop / window.innerHeight) || 1
-    );
+    setState(state => ({
+      ...state,
+      currentPage: Math.ceil(scrollTop / window.innerHeight) || 1
+    }));
   };
 
 
   return (
-    <div className={styles.body} style={{background: `rgba(0,0,0,${opacity})`}}>
+    <div className={styles.body} style={{background: `rgba(0,0,0,${state.opacity})`}}>
       <div className={styles.body__container} onScroll={handleScroll}>
 
         <div className={styles.body__pages}>
-          Page {currentPage} of {maxPage}
+          Page {state.currentPage} of {state.maxPage}
         </div>
 
         <div className={styles.body__grid} ref={gridRef}>
 
-          {items.map(item => (
+          {state.items.map(item => (
             <div key={item.id} className={styles.body__item}>
               <img src="https://via.placeholder.com/300" alt={item.alt} />
             </div>
