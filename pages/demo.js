@@ -6,14 +6,14 @@ const Demo = () => {
 
   const ITEMS_TOTAL = 100;
 
+  const gridRef = useRef(null);
+
   const [state, setState] = useState({
     items: [],
     opacity: 0,
     currentPage: 1,
-    maxPage: 0
+    maxPage: Math.ceil(gridRef.current.offsetHeight / window.innerHeight) - 1
   });
-
-  const gridRef = useRef(null);
 
 
   useEffect(()=>{
