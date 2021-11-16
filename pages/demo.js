@@ -4,7 +4,7 @@ import styles from '../styles/Demo.module.scss';
 
 const Demo = () => {
 
-  const ITEMS_TOTAL = 100;
+  const ITEMS_TOTAL = 70;
 
   const gridRef = useRef(null);
 
